@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solana Proton - Register/Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #7b2ff2 0%, #f357a8 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-container {
+            background: rgba(25, 8, 56, 0.97);
+            border-radius: 18px;
+            padding: 36px 28px 30px 28px;
+            max-width: 390px;
+            width: 100%;
+            box-shadow: 0 8px 32px #0006;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo-holder {
+            width: 60px;
+            height: 60px;
+            background: #300363;
+            border-radius: 50%;
+            border: 3px solid #9e6bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .logo-holder img {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+        }
+        h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+            color: #e7e3ff;
+        }
+        .subtitle {
+            color: #c7b7f7;
+            margin-bottom: 22px;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 19px;
+        }
+        .form-group label {
+            font-size: 1.01rem;
+            margin-bottom: 7px;
+            display: block;
+            color: #f4eaff;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 11px;
+            border-radius: 6px;
+            border: none;
+            background: #180f2e;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            outline: 2px solid #7b2ff2;
+        }
+        .ref-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .get-code-btn, .login-btn {
+            background: linear-gradient(90deg,#d033ff,#7b2ff2);
+            color: #fff;
+            border: none;
+            padding: 11px 32px;
+            border-radius: 7px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 13px;
+            margin-top: 6px;
+            transition: background 0.2s;
+            box-shadow: 0 3px 12px #40005735;
+        }
+        .get-code-btn:disabled, .login-btn:disabled {
+            background: #7e57c2;
+            color: #b6a9e1;
+            cursor: not-allowed;
+        }
+        .code-row {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            gap: 7px;
+        }
+        .code-digits {
+            font-size: 1.2rem;
+            letter-spacing: 6px;
+            background: #260e4d;
+            padding: 9px 24px;
+            border-radius: 8px;
+            color: #fee140;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .copy-btn {
+            background: #3edcaa;
+            color: #1a0b2c;
+            border: none;
+            border-radius: 6px;
+            padding: 9px 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .copy-btn:active {
+            background: #20b384;
+        }
+        .error-msg {
+            color: #fa709a;
+            margin-bottom: 7px;
+            min-height: 18px;
+            text-align: center;
+        }
+        .success-msg {
+            color: #61e1b6;
+            margin-bottom: 7px;
+            min-height: 18px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="auth-container" id="register-section">
+    <div class="logo-holder">
+        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
+    </div>
+    <h2>Solana Proton</h2>
+    <div class="subtitle">Register / Login to your Mining Portfolio</div>
+    <form id="register-form" autocomplete="off">
+        <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" required autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" required autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="refid">Referral ID</label>
+            <div class="ref-row">
+                <input type="text" id="refid" placeholder="Optional" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="get-code-btn" id="get-code-btn">Get Code</button>
+        </div>
+        <div class="code-row hidden" id="code-row">
+            <div class="code-digits" id="code-digits">000000</div>
+            <button type="button" class="copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <div class="form-group hidden" id="enter-code-group">
+            <label for="enter-code">Enter Code</label>
+            <input type="text" id="enter-code" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Enter code to login">
+        </div>
+        <div class="error-msg" id="error-msg"></div>
+        <div class="success-msg" id="success-msg"></div>
+        <div class="form-actions">
+            <button type="submit" class="login-btn hidden" id="login-btn">Login to Portfolio</button>
+        </div>
+    </form>
+</div>
+
+<!-- Portfolio Main View (hidden initially) -->
+<div class="auth-container hidden" id="portfolio-section">
+    <div class="logo-holder">
+        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
+    </div>
+    <h2>Welcome to Solana Mining Portfolio</h2>
+    <div class="subtitle">Portfolio view unlocked.</div>
+    <div style="margin-top: 10px; color:#fee140;">
+        (Your mining dashboard goes here.)
+    </div>
+</div>
+
+<script>
+let generatedCode = "";
+let codeTimeout;
+const registerForm = document.getElementById('register-form');
+const getCodeBtn = document.getElementById('get-code-btn');
+const codeRow = document.getElementById('code-row');
+const codeDigits = document.getElementById('code-digits');
+const copyBtn = document.getElementById('copy-btn');
+const enterCodeGroup = document.getElementById('enter-code-group');
+const enterCodeInput = document.getElementById('enter-code');
+const errorMsg = document.getElementById('error-msg');
+const successMsg = document.getElementById('success-msg');
+const loginBtn = document.getElementById('login-btn');
+const portfolioSection = document.getElementById('portfolio-section');
+const registerSection = document.getElementById('register-section');
+
+function randomCode(n) {
+    let code = "";
+    for(let i=0;i<n;i++) code += Math.floor(Math.random()*10);
+    return code;
+}
+
+getCodeBtn.onclick = function() {
+    errorMsg.textContent = "";
+    successMsg.textContent = "";
+    // Validate fields (basic)
+    let fname = document.getElementById('fname').value.trim();
+    let email = document.getElementById('email').value.trim();
+    let phone = document.getElementById('phone').value.trim();
+    if (!fname || !email || !phone) {
+        errorMsg.textContent = "Please fill all required fields.";
+        return;
+    }
+    // Generate and show code
+    generatedCode = randomCode(6);
+    codeDigits.textContent = generatedCode;
+    codeRow.classList.remove('hidden');
+    enterCodeGroup.classList.remove('hidden');
+    loginBtn.classList.remove('hidden');
+    getCodeBtn.disabled = true;
+    // Set code to expire after 3 min
+    if (codeTimeout) clearTimeout(codeTimeout);
+    codeTimeout = setTimeout(() => {
+        generatedCode = "";
+        codeDigits.textContent = "------";
+        errorMsg.textContent = "Code expired. Please get a new code.";
+        getCodeBtn.disabled = false;
+        loginBtn.classList.add('hidden');
+    }, 180000);
+}
+
+copyBtn.onclick = function() {
+    navigator.clipboard.writeText(codeDigits.textContent);
+    successMsg.textContent = "Code copied!";
+    setTimeout(() => { successMsg.textContent = ""; }, 1500);
+}
+
+registerForm.onsubmit = function(e) {
+    e.preventDefault();
+    errorMsg.textContent = "";
+    successMsg.textContent = "";
+    if (!generatedCode) {
+        errorMsg.textContent = "Please get a code first.";
+        return;
+    }
+    let inputCode = enterCodeInput.value.trim();
+    if (inputCode !== generatedCode) {
+        errorMsg.textContent = "Incorrect code. Please try again.";
+        return;
+    }
+    // Success: show portfolio section
+    clearTimeout(codeTimeout);
+    registerSection.classList.add('hidden');
+    portfolioSection.classList.remove('hidden');
+}
+
+enterCodeInput.oninput = function() {
+    errorMsg.textContent = "";
+    if (enterCodeInput.value.trim().length === 6) {
+        loginBtn.focus();
+    }
+};
+</script>
+</body>
+</html>
