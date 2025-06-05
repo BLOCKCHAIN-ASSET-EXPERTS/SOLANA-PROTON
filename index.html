@@ -386,7 +386,7 @@
 <!-- Register/Login Section -->
 <div class="auth-container" id="register-section">
     <div class="logo-holder">
-        <img src="IMG_0314.jpeg" alt="Solana">
+        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
     </div>
     <h2>Solana Proton</h2>
     <div class="subtitle">Register / Login to your Mining Portfolio</div>
@@ -432,7 +432,7 @@
 <div class="dashboard-container hidden" id="dashboard-section">
     <div class="dashboard-header">
         <div class="logo-holder">
-            <img src="IMG_0314.jpeg" alt="Solana">
+            <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana">
         </div>
         <div>
             <h2>Solana Proton</h2>
@@ -453,7 +453,7 @@
                     <img class="solana-logo-table" src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL"> Solana (SOL)
                 </td>
                 <td id="sol-price">$-&nbsp;</td>
-                <td id="portfolio-balance">0.00 SOL</td> 
+                <td id="portfolio-balance">0.00 SOL</td>
             </tr>
         </tbody>
     </table>
@@ -469,13 +469,23 @@
         <button class="action-btn" id="deposit-btn">Deposit</button>
         <button class="action-btn" id="withdraw-btn" disabled>Withdraw</button>
     </div>
-    <div class="media-gallery">
-        <div class="media-item gif placeholder" id="IMG_0332.gif">IMG_0332.gif</div>
-        <div class="media-item gif placeholder" id="IMG_0318.jpeg">IMG_0318.jpeg</div>
-        <div class="media-item placeholder" id="IMG_0315.jpeg">IMG_0315.jpeg</div>
-        <div class="media-item placeholder" id="IMG_0317.jpeg">IMG_0317.jpeg</div>
-        <div class="media-item placeholder" id="IMG_0300.gif">IMG_0300.gif</div>
+  <div class="media-gallery">
+    <div class="media-item gif" id="gif1">
+        <img src=""IMG_0332.gif" alt="GIF 1">
     </div>
+    <div class="media-item gif" id="gif2">
+        <img src="IMG_0318.jpeg" alt="GIF 2">
+    </div>
+    <div class="media-item" id="img1">
+        <img src="IMG_0315. jpeg" alt="IMG 1">
+    </div>
+    <div class="media-item" id="img2">
+        <img src="IMG_0317.jpeg" alt="IMG 2">
+    </div>
+    <div class="media-item" id="img3">
+        <img src="IMG_0300.gif" alt="IMG 3">
+    </div>
+</div>
     <button class="logout-btn" id="logout-btn">Logout</button>
 </div>
 
@@ -660,7 +670,7 @@ let sessionEnd = null;
 let nextSpinTime = null;
 let wheelSpinning = false;
 let solPrice = null;
-let rewardInterval = 6 * 60; // 6 minutes in seconds
+let rewardInterval = 15; // 15 seconds for spin interval!
 let sessionHours = 5;
 let sessionSeconds = sessionHours * 3600;
 let rewardAmount = 0.5;
@@ -724,7 +734,7 @@ spinBtn.onclick = async function() {
     wheelSpinning = true;
     spinBtn.disabled = true;
     spinTimerEl.textContent = "Spinning...";
-    let duration = 1600;
+    let duration = 700;
     let spins = 5 + Math.random()*3;
     let start = performance.now();
     function animateWheel(ts) {
@@ -756,7 +766,7 @@ function showRewardPopup(text) {
     if (rewardPopupTimeout) clearTimeout(rewardPopupTimeout);
     rewardPopupTimeout = setTimeout(() => {
         rewardPopup.style.display = 'none';
-    }, 2600);
+    }, 2000);
 }
 
 function updateBalance() {
